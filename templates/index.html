@@ -10,20 +10,30 @@
 </head>
 <body>
     <h1>Rutas Más Usadas</h1>
+    
+    <label for="numResults">Número de resultados:</label>
+    <input type="number" id="numResults" name="numResults" min="1" max="100" value="10">
+    <button onclick="updateChart()">Actualizar</button>
+    
     <canvas id="routesChart" width="400" height="200"></canvas>
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        let chart;
+
+        function updateChart() {
+            const numResults = document.getElementById('numResults').value;
             axios.get('/api/routes')
                 .then(response => {
                     const data = response.data;
-
-                    // Filtra los primeros 10 resultados
-                    const top10Data = data.slice(0, 10);
-                    const labels = top10Data.map(item => item.route_long_name);
-                    const counts = top10Data.map(item => item.route_count);
+                    const topData = data.slice(0, numResults);
+                    const labels = topData.map(item => item.route_long_name);
+                    const counts = topData.map(item => item.route_count);
 
                     const ctx = document.getElementById('routesChart').getContext('2d');
-                    new Chart(ctx, {
+                    if (chart) {
+                        chart.destroy();
+                    }
+                    chart = new Chart(ctx, {
                         type: 'bar',
                         data: {
                             labels: labels,
@@ -47,6 +57,10 @@
                 .catch(error => {
                     console.error('Error fetching data:', error);
                 });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            updateChart();
         });
     </script>
 </body>
