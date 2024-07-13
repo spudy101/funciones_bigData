@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="/static/style.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
 </head>
 <body>
     <h1>Selecciona el gráfico a mostrar</h1>
@@ -22,6 +24,7 @@
     <input type="number" id="numResults" name="numResults" min="1" max="100" value="10">
     
     <button onclick="updateChart()">Actualizar</button>
+    <button onclick="generatePDF()">Generar PDF</button>
     
     <canvas id="mainChart" width="400" height="200"></canvas>
     
@@ -89,6 +92,17 @@
                 .catch(error => {
                     console.error('Error fetching data:', error);
                 });
+        }
+
+        function generatePDF() {
+            html2canvas(document.getElementById('mainChart'), {
+                onrendered: function(canvas) {
+                    const imgData = canvas.toDataURL('image/png');
+                    const pdf = new jsPDF('landscape');
+                    pdf.addImage(imgData, 'PNG', 10, 10);
+                    pdf.save('chart.pdf');
+                }
+            });
         }
 
         document.addEventListener('DOMContentLoaded', function () {
