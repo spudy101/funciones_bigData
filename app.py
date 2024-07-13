@@ -36,6 +36,32 @@ def get_routes():
 
     return jsonify(routes)
 
+@app.route('/api/agencies')
+def get_agencies():
+    query = """
+        SELECT 
+            a.agency_name, 
+            COUNT(*) AS agency_count 
+        FROM 
+            `dulcet-bucksaw-425222-h3.transporte_us.agency` a
+        INNER JOIN 
+            `dulcet-bucksaw-425222-h3.transporte_us.routes` r
+        ON 
+            a.agency_id = r.agency_id
+        GROUP BY 
+            a.agency_name
+        ORDER BY 
+            agency_count DESC
+    """
+    query_job = client.query(query)
+    results = query_job.result()
+
+    agencies = []
+    for row in results:
+        agencies.append({"agency_name": row.agency_name, "agency_count": row.agency_count})
+
+    return jsonify(agencies)
+
 @app.route('/')
 def index():
     return render_template('index.html')
