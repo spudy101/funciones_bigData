@@ -23,6 +23,9 @@
     <label for="numResults">Número de resultados:</label>
     <input type="number" id="numResults" name="numResults" min="1" max="100" value="10">
     
+    <label for="chartTitle">Título del gráfico:</label>
+    <input type="text" id="chartTitle" name="chartTitle" value="Mi Gráfico">
+    
     <button onclick="updateChart()">Actualizar</button>
     <button onclick="generatePDF()">Generar PDF</button>
     
@@ -34,6 +37,7 @@
         function updateChart() {
             const chartType = document.getElementById('chartType').value;
             const numResults = document.getElementById('numResults').value;
+            const chartTitle = document.getElementById('chartTitle').value;
             let apiUrl = '';
 
             if (chartType === 'routes') {
@@ -84,6 +88,12 @@
                             scales: {
                                 y: {
                                     beginAtZero: true
+                                }
+                            },
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: chartTitle
                                 }
                             }
                         }
