@@ -16,8 +16,11 @@
             axios.get('/api/routes')
                 .then(response => {
                     const data = response.data;
-                    const labels = data.map(item => item.route_long_name);
-                    const counts = data.map(item => item.route_count);
+
+                    // Filtra los primeros 10 resultados
+                    const top10Data = data.slice(0, 10);
+                    const labels = top10Data.map(item => item.route_long_name);
+                    const counts = top10Data.map(item => item.route_count);
 
                     const ctx = document.getElementById('routesChart').getContext('2d');
                     new Chart(ctx, {
