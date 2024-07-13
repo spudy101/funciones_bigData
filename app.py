@@ -13,13 +13,13 @@ def get_routes():
             r.route_long_name,
             COUNT(*) AS route_count
         FROM
-            `your_project_id.your_dataset_id.frequencies` f
+            `dulcet-bucksaw-425222-h3.transporte_us.frequencies` f
         INNER JOIN
-            `your_project_id.your_dataset_id.trips` t
+            `dulcet-bucksaw-425222-h3.transporte_us.trips` t
         ON
             t.trip_id = f.trip_id
         INNER JOIN
-            `your_project_id.your_dataset_id.routes` r
+            `dulcet-bucksaw-425222-h3.transporte_us.routes` r
         ON
             r.route_id = t.route_id
         GROUP BY
