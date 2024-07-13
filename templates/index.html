@@ -15,6 +15,7 @@
     <select id="chartType">
         <option value="routes">Rutas Más Usadas</option>
         <option value="agencies">Agencias con Más Rutas</option>
+        <option value="colors">Colores de las Rutas</option>
     </select>
     
     <label for="numResults">Número de resultados:</label>
@@ -36,6 +37,8 @@
                 apiUrl = '/api/routes';
             } else if (chartType === 'agencies') {
                 apiUrl = '/api/agencies';
+            } else if (chartType === 'colors') {
+                apiUrl = '/api/colors';
             }
 
             axios.get(apiUrl)
@@ -52,6 +55,10 @@
                         labels = topData.map(item => item.agency_name);
                         counts = topData.map(item => item.agency_count);
                         label = '# de rutas';
+                    } else if (chartType === 'colors') {
+                        labels = topData.map(item => item.route_color);
+                        counts = topData.map(item => item.color_count);
+                        label = '# de rutas con color';
                     }
 
                     const ctx = document.getElementById('mainChart').getContext('2d');
