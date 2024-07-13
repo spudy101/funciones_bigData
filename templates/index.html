@@ -26,7 +26,7 @@
     <button onclick="updateChart()">Actualizar</button>
     <button onclick="generatePDF()">Generar PDF</button>
     
-    <canvas id="mainChart" width="600" height="500"></canvas>
+    <canvas id="mainChart" style="max-width: 100%; height: auto;"></canvas>
     
     <script>
         let chart;
@@ -101,10 +101,22 @@
                 onrendered: function(canvas) {
                     const imgData = canvas.toDataURL('image/png');
                     const pdf = new jsPDF('landscape', 'mm', 'a4'); // Configura el tamaño y orientación del PDF
-                    const imgWidth = 290; // Ajusta el ancho de la imagen en el PDF
-                    const imgHeight = (canvas.height * imgWidth) / canvas.width; // Calcula la altura de la imagen manteniendo la proporción
+                    const imgWidth = 297; // Ancho de una página A4 en modo paisaje
+                    const pageHeight = 210; // Altura de una página A4 en modo paisaje
+                    const imgHeight = canvas.height * imgWidth / canvas.width; // Calcula la altura de la imagen manteniendo la proporción
+                    let heightLeft = imgHeight;
+                    let position = 0;
 
-                    pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+
+                    while (heightLeft >= 0) {
+                        position = heightLeft - imgHeight;
+                        pdf.addPage();
+                        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                        heightLeft -= pageHeight;
+                    }
+
                     pdf.save('chart.pdf');
                 }
             });
