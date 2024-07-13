@@ -26,7 +26,7 @@
     <button onclick="updateChart()">Actualizar</button>
     <button onclick="generatePDF()">Generar PDF</button>
     
-    <canvas id="mainChart" width="400" height="200"></canvas>
+    <canvas id="mainChart" width="800" height="400"></canvas>
     
     <script>
         let chart;
@@ -96,10 +96,15 @@
 
         function generatePDF() {
             html2canvas(document.getElementById('mainChart'), {
+                scale: 2, // Aumenta la escala para mejorar la calidad de la imagen
+                useCORS: true, // Habilita CORS para capturar imágenes externas
                 onrendered: function(canvas) {
                     const imgData = canvas.toDataURL('image/png');
-                    const pdf = new jsPDF('landscape');
-                    pdf.addImage(imgData, 'PNG', 10, 10);
+                    const pdf = new jsPDF('landscape', 'mm', 'a4'); // Configura el tamaño y orientación del PDF
+                    const imgWidth = 290; // Ajusta el ancho de la imagen en el PDF
+                    const imgHeight = (canvas.height * imgWidth) / canvas.width; // Calcula la altura de la imagen manteniendo la proporción
+
+                    pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
                     pdf.save('chart.pdf');
                 }
             });
